@@ -1,49 +1,80 @@
 #include"mai.h"
 struct User
 {
-	explicit User(){};
-	~User(){};
-	std::string FIO = "";
-    std::string nomer = "";
-	std::string fio()
-	{
-		std::cout << "Введите ФИО\n";
-        while(FIO=="")
+    explicit User() {};
+    ~User() {};
+    std::string FIO;
+    std::string nomer;
+    bool is_valid_fio(std::string fio)
+    {
+        for (int i = 0; i < size(fio); i++)
         {
-            getline(std::cin, FIO);
-            for (int i = 0; i < size(FIO); i++)
-                if (isdigit(FIO[i]))
-                    FIO = "";
+            if (isdigit(fio[i]))
+                return false;
         }
-        return FIO;
-	}
-    std::string NOMER()
-	{
-		std::cout << "Введите номер телефона используя +7 или 8\n";
-        while (nomer == "")
+        return true;
+    }
+    std::string fio()
+    {
+        std::string fio;
+        std::cout << "Введите ФИО\n";
+        while (getline(std::cin, fio))
         {
-            getline(std::cin, nomer);
-            if (size(nomer) > 12) {
-                std::cout << "Слишком длинный номер\n";
-                nomer = "";
-            }
-            else if(size(nomer) < 11)
+            if (is_valid_fio(fio))
+                break;
+            else
             {
-                std::cout << "Слишком короткий номер\n";
-                nomer = "";
+                std::cout << "Попробуйте ещё раз\n";
             }
-            for (int i = 0; i < size(nomer); i++)
-                if (!isdigit(nomer[i]) && nomer[0] != '+')
-                    nomer = "";
         }
-        return nomer;
-	}
+        return fio;
+    }
+    bool is_valid_number(std::string phone)
+    {
+        if (phone[0] != '+' && phone[0] != '8')
+            return false;
+        if (phone[0] == '+' && phone[1] != '7')
+            return false;
+        if (size(phone) > 12 || size(phone) < 11)
+        {
+            return false;
+        }
+        for (int i = 1; i < size(phone); i++)
+        {
+            if (!isdigit(phone[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    std::string NOMER()
+    {
+        std::string phone;
+        std::cout << "Введите номер телефона используя +7 или 8\n";
+        while (getline(std::cin, phone))
+        {
+            if (is_valid_number(phone))
+                return phone;
+            else
+            {
+                std::cout << "Попробуйте ещё раз\n";
+            }
+        }
+    }
     void clear_data()
     {
-        FIO = "";
-        nomer = "";
+        FIO.clear();
+        nomer.clear();
     }
-		
+    void get_fio()
+    {
+        FIO = fio();
+    }
+    void get_phone()
+    {
+        nomer = NOMER();
+    }
 };
 int main()
 {
@@ -65,17 +96,13 @@ int main()
         exit(1);
     }
     con->setSchema("phonebook");
-    //stmt = con->createStatement();
-    //stmt->execute("DROP TABLE IF EXISTS Users");
-    //std::cout << "Таблица удалена(если существовала)" << std::endl;
-    //stmt->execute("CREATE TABLE Users (id serial PRIMARY KEY, FIO VARCHAR(50), Phone VARCHAR(50));");
-    //std::cout << "Таблица создана" << std::endl;
     int x;
     while (_getch() != 27)
     {
         system("cls");
         std::cout << "Выберите действие:\n1.Добавить пользователя в телефонную книгу\n2.Удалить пользователя из телефонной книги\n3.Поиск пользователя в телефонной книге\n";
         std::cin >> x;
+        std::cin.get();
         system("cls");
         switch (x)
         {
@@ -83,20 +110,25 @@ int main()
             {
                 std::cout << "1.Добавить пользователя в телефонную книгу\n";
                 User new_user;
-                pstmt = con->prepareStatement("INSERT INTO Users(FIO, Phone) VALUES(?,?)");
-                pstmt->setString(1, new_user.fio());
-                pstmt->setString(2, new_user.NOMER());
+                new_user.get_fio();
+                new_user.get_phone();
+                pstmt = con->prepareStatement("INSERT INTO Users(FIO, Phone) VALUES(?, ?)");
+                pstmt->setString(1, new_user.FIO);
+                pstmt->setString(2, new_user.nomer);
                 pstmt->execute();
+                new_user.clear_data();
                 delete pstmt;
+
                 break;
             }
             case 2:
             {
                 User new_user;
+                new_user.get_fio();
                 pstmt = con->prepareStatement("DELETE FROM Users WHERE FIO = ?");
-                pstmt->setString(1, new_user.fio());
+                pstmt->setString(1, new_user.FIO);
                 pstmt->execute();
-                std::cout << "Пользователь с ФИО: " << new_user.FIO << " удалён из базы данных\n";
+                std::cout << "Пользователь удалён из базы данных\n";
                 delete pstmt;
                 new_user.clear_data();
                 break;
@@ -104,17 +136,18 @@ int main()
             case 3:
             {
                 User new_user;
+                new_user.get_fio();
                 pstmt = con->prepareStatement("SELECT * FROM Users WHERE FIO = ?");
-                pstmt->setString(1, new_user.fio());
+                pstmt->setString(1, new_user.FIO);
                 res = pstmt->executeQuery();
                 while (res->next())
                 {
-                        std::cout << "ФИО - " << res->getString("FIO") << std::endl;
-                        std::cout << "Номер телефона - " << res->getString("Phone") << std::endl;
+                    std::cout << "ФИО - " << res->getString("FIO") << std::endl;
+                    std::cout << "Номер телефона - " << res->getString("Phone") << std::endl;
                 }
                 delete pstmt;
                 new_user.clear_data();
-                break;
+                //break;
             }
         }
     }

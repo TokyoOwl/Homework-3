@@ -1,20 +1,46 @@
 #include"mai.h"
+bool is_valid_number(std::string phone)
+{
+    if (phone[0] != '+' && phone[0] != '8')
+        return false;
+    if (phone[0] == '+' && phone[1] != '7')
+        return false;
+    if (size(phone) > 12 || size(phone) < 11)
+    {
+        return false;
+    }
+    for (int i = 1; i < size(phone); i++)
+    {
+        if (!isdigit(phone[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+bool is_valid_fio(std::string fio)
+{
+    for (int i = 0; i < size(fio); i++)
+    {
+        if (isdigit(fio[i]))
+            return false;
+    }
+    return true;
+}
+void is_valid_tests()
+{
+    assert(is_valid_number("+79999999999" ) == true);
+    assert(is_valid_fio("Litov Yakov Lvovich") == true);
+    std::cout << "Tests OK\n";
+}
 struct User
 {
     explicit User() {};
     ~User() {};
     std::string FIO;
-    std::string nomer;
-    bool is_valid_fio(std::string fio)
-    {
-        for (int i = 0; i < size(fio); i++)
-        {
-            if (isdigit(fio[i]))
-                return false;
-        }
-        return true;
-    }
-    std::string fio()
+    std::string phone;
+
+    std::string get_fio()
     {
         std::string fio;
         std::cout << "¬ведите ‘»ќ\n";
@@ -29,26 +55,7 @@ struct User
         }
         return fio;
     }
-    bool is_valid_number(std::string phone)
-    {
-        if (phone[0] != '+' && phone[0] != '8')
-            return false;
-        if (phone[0] == '+' && phone[1] != '7')
-            return false;
-        if (size(phone) > 12 || size(phone) < 11)
-        {
-            return false;
-        }
-        for (int i = 1; i < size(phone); i++)
-        {
-            if (!isdigit(phone[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    std::string NOMER()
+    std::string get_phone()
     {
         std::string phone;
         std::cout << "¬ведите номер телефона использу€ +7 или 8\n";
@@ -65,19 +72,20 @@ struct User
     void clear_data()
     {
         FIO.clear();
-        nomer.clear();
+        phone.clear();
     }
-    void get_fio()
+    void set_fio()
     {
-        FIO = fio();
+        FIO = get_fio();
     }
-    void get_phone()
+    void set_phone()
     {
-        nomer = NOMER();
+        phone = get_phone();
     }
 };
 int main()
 {
+    is_valid_tests();
     sql::Driver* driver;
     sql::Connection* con;
     sql::Statement* stmt;
@@ -114,7 +122,7 @@ int main()
                 new_user.get_phone();
                 pstmt = con->prepareStatement("INSERT INTO Users(FIO, Phone) VALUES(?, ?)");
                 pstmt->setString(1, new_user.FIO);
-                pstmt->setString(2, new_user.nomer);
+                pstmt->setString(2, new_user.phone);
                 pstmt->execute();
                 new_user.clear_data();
                 delete pstmt;
@@ -147,7 +155,7 @@ int main()
                 }
                 delete pstmt;
                 new_user.clear_data();
-                //break;
+                break;
             }
         }
     }

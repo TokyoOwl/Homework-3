@@ -118,8 +118,8 @@ int main()
             {
                 std::cout << "1.Добавить пользователя в телефонную книгу\n";
                 User new_user;
-                new_user.get_fio();
-                new_user.get_phone();
+                new_user.set_fio();
+                new_user.set_phone();
                 pstmt = con->prepareStatement("INSERT INTO Users(FIO, Phone) VALUES(?, ?)");
                 pstmt->setString(1, new_user.FIO);
                 pstmt->setString(2, new_user.phone);
@@ -132,7 +132,7 @@ int main()
             case 2:
             {
                 User new_user;
-                new_user.get_fio();
+                new_user.set_fio();
                 pstmt = con->prepareStatement("DELETE FROM Users WHERE FIO = ?");
                 pstmt->setString(1, new_user.FIO);
                 pstmt->execute();
@@ -144,7 +144,7 @@ int main()
             case 3:
             {
                 User new_user;
-                new_user.get_fio();
+                new_user.set_fio();
                 pstmt = con->prepareStatement("SELECT * FROM Users WHERE FIO = ?");
                 pstmt->setString(1, new_user.FIO);
                 res = pstmt->executeQuery();

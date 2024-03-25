@@ -1,4 +1,4 @@
-#include"mai.h"
+ï»¿#include"mai.h"
 bool is_valid_number(std::string phone)
 {
     if (phone[0] != '+' && phone[0] != '8')
@@ -43,14 +43,14 @@ struct User
     std::string get_fio()
     {
         std::string fio;
-        std::cout << "Ââåäèòå ÔÈÎ\n";
+        std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž\n";
         while (getline(std::cin, fio))
         {
             if (is_valid_fio(fio))
                 break;
             else
             {
-                std::cout << "Ïîïðîáóéòå åù¸ ðàç\n";
+                std::cout << "ÐŸÐ¾Ð¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ ÐµÑ‰Ñ‘ Ñ€Ð°Ð·\n";
             }
         }
         return fio;
@@ -58,14 +58,14 @@ struct User
     std::string get_phone()
     {
         std::string phone;
-        std::cout << "Ââåäèòå íîìåð òåëåôîíà èñïîëüçóÿ +7 èëè 8\n";
+        std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð° Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÑ +7 Ð¸Ð»Ð¸ 8\n";
         while (getline(std::cin, phone))
         {
             if (is_valid_number(phone))
                 return phone;
             else
             {
-                std::cout << "Ïîïðîáóéòå åù¸ ðàç\n";
+                std::cout << "ÐŸÐ¾Ð¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ ÐµÑ‰Ñ‘ Ñ€Ð°Ð·\n";
             }
         }
     }
@@ -108,7 +108,7 @@ int main()
     while (_getch() != 27)
     {
         system("cls");
-        std::cout << "Âûáåðèòå äåéñòâèå:\n1.Äîáàâèòü ïîëüçîâàòåëÿ â òåëåôîííóþ êíèãó\n2.Óäàëèòü ïîëüçîâàòåëÿ èç òåëåôîííîé êíèãè\n3.Ïîèñê ïîëüçîâàòåëÿ â òåëåôîííîé êíèãå\n";
+        std::cout << "Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ðµ:\n1.Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð² Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð½ÑƒÑŽ ÐºÐ½Ð¸Ð³Ñƒ\n2.Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð¸Ð· Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð½Ð¾Ð¹ ÐºÐ½Ð¸Ð³Ð¸\n3.ÐŸÐ¾Ð¸ÑÐº Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð² Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð½Ð¾Ð¹ ÐºÐ½Ð¸Ð³Ðµ\n";
         std::cin >> x;
         std::cin.get();
         system("cls");
@@ -116,7 +116,7 @@ int main()
         {
             case 1:
             {
-                std::cout << "1.Äîáàâèòü ïîëüçîâàòåëÿ â òåëåôîííóþ êíèãó\n";
+                std::cout << "1.Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð² Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð½ÑƒÑŽ ÐºÐ½Ð¸Ð³Ñƒ\n";
                 User new_user;
                 new_user.set_fio();
                 new_user.set_phone();
@@ -136,7 +136,7 @@ int main()
                 pstmt = con->prepareStatement("DELETE FROM Users WHERE FIO = ?");
                 pstmt->setString(1, new_user.FIO);
                 pstmt->execute();
-                std::cout << "Ïîëüçîâàòåëü óäàë¸í èç áàçû äàííûõ\n";
+                std::cout << "ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ ÑƒÐ´Ð°Ð»Ñ‘Ð½ Ð¸Ð· Ð±Ð°Ð·Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ñ…\n";
                 delete pstmt;
                 new_user.clear_data();
                 break;
@@ -150,8 +150,8 @@ int main()
                 res = pstmt->executeQuery();
                 while (res->next())
                 {
-                    std::cout << "ÔÈÎ - " << res->getString("FIO") << std::endl;
-                    std::cout << "Íîìåð òåëåôîíà - " << res->getString("Phone") << std::endl;
+                    std::cout << "Ð¤Ð˜Ðž - " << res->getString("FIO") << std::endl;
+                    std::cout << "ÐÐ¾Ð¼ÐµÑ€ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ð° - " << res->getString("Phone") << std::endl;
                 }
                 delete pstmt;
                 new_user.clear_data();
@@ -160,4 +160,4 @@ int main()
         }
     }
 	return 0;
-}//
+}

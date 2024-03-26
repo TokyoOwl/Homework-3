@@ -1,38 +1,4 @@
 ﻿#include"mai.h"
-bool is_valid_number(std::string phone)
-{
-    if (phone[0] != '+' && phone[0] != '8')
-        return false;
-    if (phone[0] == '+' && phone[1] != '7')
-        return false;
-    if (size(phone) > 12 || size(phone) < 11)
-    {
-        return false;
-    }
-    for (int i = 1; i < size(phone); i++)
-    {
-        if (!isdigit(phone[i]))
-        {
-            return false;
-        }
-    }
-    return true;
-}
-bool is_valid_fio(std::string fio)
-{
-    for (int i = 0; i < size(fio); i++)
-    {
-        if (isdigit(fio[i]))
-            return false;
-    }
-    return true;
-}
-void is_valid_tests()
-{
-    assert(is_valid_number("+79999999999" ) == true);
-    assert(is_valid_fio("Litov Yakov Lvovich") == true);
-    std::cout << "Tests OK\n";
-}
 struct User
 {
     explicit User() {};
@@ -40,52 +6,23 @@ struct User
     std::string FIO;
     std::string phone;
 
-    std::string get_fio()
-    {
-        std::string fio;
-        std::cout << "Введите ФИО\n";
-        while (getline(std::cin, fio))
-        {
-            if (is_valid_fio(fio))
-                break;
-            else
-            {
-                std::cout << "Попробуйте ещё раз\n";
-            }
-        }
-        return fio;
-    }
-    std::string get_phone()
-    {
-        std::string phone;
-        std::cout << "Введите номер телефона используя +7 или 8\n";
-        while (getline(std::cin, phone))
-        {
-            if (is_valid_number(phone))
-                return phone;
-            else
-            {
-                std::cout << "Попробуйте ещё раз\n";
-            }
-        }
-    }
+    
     void clear_data()
     {
         FIO.clear();
         phone.clear();
     }
-    void set_fio()
+    void set_fio(std::string str)
     {
-        FIO = get_fio();
+        FIO = str;
     }
-    void set_phone()
+    void set_phone(std::string str)
     {
-        phone = get_phone();
+        phone = str;
     }
 };
 int main()
 {
-    is_valid_tests();
     sql::Driver* driver;
     sql::Connection* con;
     sql::Statement* stmt;
@@ -118,8 +55,10 @@ int main()
             {
                 std::cout << "1.Добавить пользователя в телефонную книгу\n";
                 User new_user;
-                new_user.set_fio();
-                new_user.set_phone();
+                auto fio = get_fio();
+                auto phoneNumber = get_phone();
+                new_user.set_fio(fio);
+                new_user.set_phone(phoneNumber);
                 pstmt = con->prepareStatement("INSERT INTO Users(FIO, Phone) VALUES(?, ?)");
                 pstmt->setString(1, new_user.FIO);
                 pstmt->setString(2, new_user.phone);
@@ -132,7 +71,8 @@ int main()
             case 2:
             {
                 User new_user;
-                new_user.set_fio();
+                auto fio = get_fio();
+                new_user.set_fio(fio);
                 pstmt = con->prepareStatement("DELETE FROM Users WHERE FIO = ?");
                 pstmt->setString(1, new_user.FIO);
                 pstmt->execute();
@@ -144,7 +84,8 @@ int main()
             case 3:
             {
                 User new_user;
-                new_user.set_fio();
+                auto fio = get_fio();
+                new_user.set_fio(fio);
                 pstmt = con->prepareStatement("SELECT * FROM Users WHERE FIO = ?");
                 pstmt->setString(1, new_user.FIO);
                 res = pstmt->executeQuery();
